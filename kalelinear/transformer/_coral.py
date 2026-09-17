@@ -44,7 +44,7 @@ def _symmetric_inv_sqrt(matrix):
             "CORAL cannot compute a whitening transform; try a positive `lambda_`."
         )
 
-    tolerance = 10 * np.finfo(eigenvalues.dtype).eps * max(1.0, max_eigenvalue) * eigenvalues.shape[0]
+    tolerance = 10 * np.finfo(eigenvalues.dtype).eps * max_eigenvalue * eigenvalues.shape[0]
     keep = eigenvalues > tolerance
     inverse_sqrt = np.zeros_like(eigenvalues)
     inverse_sqrt[keep] = 1.0 / np.sqrt(eigenvalues[keep])

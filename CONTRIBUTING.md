@@ -223,7 +223,7 @@ Because the package is distributed on PyPI, the actual version strings must be v
 #### Release checklist
 
 - Bump the version in `setup.py` and `kalelinear/__init__.py`.
-- Update [`.github/CHANGELOG.md`](.github/CHANGELOG.md) with a summary of changes since the last release.
+- Update [`.github/CHANGELOG.md`](.github/CHANGELOG.md) with a summary of changes since the last release. The [changelog workflow](.github/workflows/changelog.yml) opens a grouped list of the merged pull requests at the top of the file when a pull request is titled with the version (e.g. `Prepare the 0.2.0b1 release of kalelinear`); reword those entries as needed before merging.
 - Create a GitHub release for the new version (e.g. `0.1.0b1`), marking prereleases appropriately.
 - The [release workflow](.github/workflows/release.yml) builds the wheel and source distribution and publishes them to Test PyPI (prerelease) or PyPI (final release).
 

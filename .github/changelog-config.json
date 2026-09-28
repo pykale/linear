@@ -6,23 +6,28 @@
   "categories": [
     {
       "title": "#### New Features",
-      "labels": ["feature", "enhancement"]
+      "labels": ["feature", "enhancement"],
+      "consume": true
     },
     {
       "title": "#### Bug Fixes",
-      "labels": ["bug", "bugfix"]
+      "labels": ["bug", "bugfix"],
+      "consume": true
     },
     {
       "title": "#### Code Improvements",
-      "labels": ["improvements", "refactor", "refactoring"]
+      "labels": ["improvements", "refactor", "refactoring"],
+      "consume": true
     },
     {
       "title": "#### Documentation",
-      "labels": ["documentation", "docs", "doc"]
+      "labels": ["documentation", "docs", "doc"],
+      "consume": true
     },
     {
       "title": "#### Tests",
-      "labels": ["tests", "testing", "test"]
+      "labels": ["tests", "testing", "test"],
+      "consume": true
     }
   ]
 }

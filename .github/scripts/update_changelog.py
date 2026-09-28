@@ -14,7 +14,9 @@ release-changelog-builder-action. It is turned into a section
 
 which is written to the top of the changelog. Group headings without any
 entries below them are dropped, so an empty "Other Changes" group does not
-leave a dangling heading behind.
+leave a dangling heading behind. If no group has any entries, which happens
+when every pull request carries an ignored label, a placeholder line is
+written instead.
 
 The generated file is rewritten to hold the final section, so the same text
 can be reused as the pull request comment body.
@@ -33,6 +35,7 @@ from pathlib import Path
 
 SECTION_RE = re.compile(r"^#\s+Version\s+(?P<version>\S+)\s*$")
 GROUP_RE = re.compile(r"^#{2,6}\s")
+NO_ENTRIES_PLACEHOLDER = "- No changelog entries: all pull requests merged since the last release have ignored labels."
 
 
 def normalise_version(version: str) -> str:
@@ -110,8 +113,11 @@ def main() -> int:
 
     body = drop_empty_groups(args.generated.read_text(encoding="utf-8"))
     if not body:
-        sys.stderr.write(f"error: {args.generated} is empty\n")
-        return 1
+        # The action falls back to its empty_template only when no pull
+        # requests were fetched at all. When every fetched pull request
+        # carries an ignored label, it renders just the empty group headings,
+        # which drop_empty_groups removes. The release still gets a section.
+        body = NO_ENTRIES_PLACEHOLDER
 
     version = normalise_version(args.version)
     section = f"# Version {version}\n\n{body}"

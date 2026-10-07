@@ -56,16 +56,17 @@ jobs:
         run: |
           version=""
           if printf '%s' "$PR_TITLE" | grep -qi 'release'; then
-            # \b anchors both ends so "0.4.0rc1" isn't truncated into the
-            # unrelated version "0.4.0": only "a"/"b" pre-releases are
-            # supported, and anything else must fail loudly below rather
-            # than being silently misfiled under the wrong version.
+            # Grab the first version-like token with any suffix attached
+            # (rc1, .dev1, -rc1, .post1, ...), then validate it strictly, so
+            # an unsupported version fails loudly instead of being truncated
+            # or skipped in favour of a later version in the title. Trailing
+            # punctuation is stripped so "Release 0.4.0." still works.
             version=$(printf '%s' "$PR_TITLE" \
-              | grep -oEi '\bv?[0-9]+\.[0-9]+\.[0-9]+([ab][0-9]+)?\b' \
-              | head -n1 || true)
+              | grep -oEi '\bv?[0-9]+\.[0-9]+\.[0-9]+[0-9a-z.+-]*' \
+              | head -n1 | sed -E 's/[.+-]+$//' || true)
             version=${version,,}
-            if [ -z "$version" ] && printf '%s' "$PR_TITLE" | grep -qE '[0-9]+\.[0-9]+\.[0-9]+'; then
-              echo "::error::Pull request title mentions a release and a version, but the version isn't a plain release or an a/b pre-release (e.g. 0.4.0 or 0.4.0b1): $PR_TITLE"
+            if [ -n "$version" ] && ! [[ $version =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([ab][0-9]+)?$ ]]; then
+              echo "::error::Pull request title mentions a release, but the version isn't a plain release or an a/b pre-release (e.g. 0.4.0 or 0.4.0b1): $PR_TITLE"
               exit 1
             fi
           fi

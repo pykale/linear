@@ -78,8 +78,14 @@ def drop_empty_groups(text: str) -> str:
 
 
 def replace_section(changelog: str, version: str, section: str) -> str:
-    """Replace the section of ``version``, or prepend it when absent."""
-    lines = changelog.splitlines()
+    """Replace the section of ``version``, or prepend it when absent.
+
+    Only the new section is tidied. The text before and after it is kept
+    verbatim, so manual edits to other sections (Markdown hard-break spaces,
+    deliberate blank lines) survive. Only the blank lines at the seams are
+    normalised to one, which keeps repeated runs idempotent.
+    """
+    lines = changelog.splitlines(keepends=True)
     start = None
     for index, line in enumerate(lines):
         match = SECTION_RE.match(line)
@@ -88,16 +94,26 @@ def replace_section(changelog: str, version: str, section: str) -> str:
             break
 
     if start is None:
-        return tidy(f"{section}\n\n{changelog}") + "\n"
+        before, after = [], lines
+    else:
+        end = len(lines)
+        for index in range(start + 1, len(lines)):
+            if SECTION_RE.match(lines[index]):
+                end = index
+                break
+        before, after = lines[:start], lines[end:]
 
-    end = len(lines)
-    for index in range(start + 1, len(lines)):
-        if SECTION_RE.match(lines[index]):
-            end = index
-            break
+    while before and not before[-1].strip():
+        before.pop()
+    while after and not after[0].strip():
+        after.pop(0)
 
-    merged = "\n\n".join(["\n".join(lines[:start]), section, "\n".join(lines[end:])])
-    return tidy(merged) + "\n"
+    pieces = [tidy(section)]
+    if before:
+        pieces.insert(0, "".join(before).rstrip("\r\n"))
+    if after:
+        pieces.append("".join(after).rstrip("\r\n"))
+    return "\n\n".join(pieces) + "\n"
 
 
 def main() -> int:

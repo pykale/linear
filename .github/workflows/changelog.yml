@@ -12,10 +12,14 @@ name: changelog
 
 on:
   pull_request:
-    # "opened"/"reopened" cover the usual flow, and "edited" picks up a pull
-    # request that is retitled into a release. "synchronize" is deliberately
-    # left out: the changelog commit below would trigger it again.
-    types: [opened, reopened, edited]
+    # Limited to "opened": "reopened" and "edited" would re-run this job on
+    # every subsequent edit (including a maintainer rewording the generated
+    # changelog section), and update_changelog.py always replaces that
+    # section wholesale, silently discarding the reword. The trade-off is
+    # that a pull request retitled into a release after opening won't get a
+    # changelog. "synchronize" is deliberately left out too: the changelog
+    # commit below would trigger it again.
+    types: [opened]
 
 # Writing the changelog commit and the pull request comment needs more than
 # the default read-only token. Without these permissions both operations fail
@@ -52,9 +56,19 @@ jobs:
         run: |
           version=""
           if printf '%s' "$PR_TITLE" | grep -qi 'release'; then
+            # Grab the first version-like token with any suffix attached
+            # (rc1, .dev1, -rc1, .post1, ...), then validate it strictly, so
+            # an unsupported version fails loudly instead of being truncated
+            # or skipped in favour of a later version in the title. Trailing
+            # punctuation is stripped so "Release 0.4.0." still works.
             version=$(printf '%s' "$PR_TITLE" \
-              | grep -oEi 'v?[0-9]+\.[0-9]+\.[0-9]+([ab][0-9]+)?' \
-              | head -n1)
+              | grep -oEi '\bv?[0-9]+\.[0-9]+\.[0-9]+[0-9a-z.+-]*' \
+              | head -n1 | sed -E 's/[.+-]+$//' || true)
+            version=${version,,}
+            if [ -n "$version" ] && ! [[ $version =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([ab][0-9]+)?$ ]]; then
+              echo "::error::Pull request title mentions a release, but the version isn't a plain release or an a/b pre-release (e.g. 0.4.0 or 0.4.0b1): $PR_TITLE"
+              exit 1
+            fi
           fi
           if [ -z "$version" ]; then
             echo "::notice::Not a release pull request, skipping changelog generation."
@@ -79,6 +93,12 @@ jobs:
           fromTag: ${{ steps.previous.outputs.tag }}
           toTag: ${{ github.event.pull_request.head.sha }}
           outputFile: .github/changelog.generated.md
+          # Without this, a failed commit-comparison request (e.g. a bad tag
+          # or an API error) is treated as an empty diff: the action emits
+          # the "no pull requests were merged" placeholder as if it were a
+          # real result, and the steps below would commit that placeholder
+          # over a valid changelog section.
+          failOnError: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update changelog
@@ -86,7 +106,8 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          python3 .github/scripts/update_changelog.py \
+          git show "${{ github.event.pull_request.base.sha }}:.github/scripts/update_changelog.py" > "$RUNNER_TEMP/update_changelog.py"
+          python3 "$RUNNER_TEMP/update_changelog.py" \
             "$VERSION" \
             .github/changelog.generated.md \
             .github/CHANGELOG.md
@@ -110,7 +131,14 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Comment changelog on pull request
-        if: steps.version.outputs.version != '' && steps.commit.outputs.changed == 'true'
+        # Independent of steps.commit.outputs.changed: Update changelog
+        # above always rewrites changelog.generated.md with the current
+        # section, whether or not this run pushed a commit. Gating on
+        # "changed" would mean a run that pushes successfully but then
+        # fails (or is cancelled) before commenting could never comment on
+        # a later re-run, since that re-run would find the content already
+        # committed and skip the push, permanently skipping the comment too.
+        if: steps.version.outputs.version != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}

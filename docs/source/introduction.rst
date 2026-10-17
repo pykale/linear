@@ -14,7 +14,7 @@ covariates, side information, or unlabeled target samples.
 Main Features
 -------------
 
-* Transformer models for learning feature embeddings: CORAL, MPCA, TCA, JDA,
+* Transformer models for learning feature embeddings: CORAL, GFK, MPCA, TCA, JDA,
   BDA, MIDA, CIFE, and AJIVE.
 * Estimator models for classification and adaptation: LapSVM, LapRLS, ARSVM,
   ARRLS, CoIRSVM, CoIRLS, and GSDA.

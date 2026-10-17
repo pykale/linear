@@ -9,6 +9,7 @@ def test_embed_module_exposes_transformers():
     assert embed.JDA is transformer.JDA
     assert embed.BDA is transformer.BDA
     assert embed.CORAL is transformer.CORAL
+    assert embed.GFK is transformer.GFK
     assert embed.MIDA is transformer.MIDA
     assert embed.MPCA is transformer.MPCA
     assert embed.CIFE is transformer.CIFE

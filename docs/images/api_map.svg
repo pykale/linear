@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 708" width="1400" height="708" font-family="Helvetica, Arial, sans-serif">
+<style>
+.title{font-size:24px;font-weight:700;fill:#1f2328}
+.sub{font-size:13px;fill:#57606a}
+.colhead{font-size:17px;font-weight:700;fill:#1f2328}
+.colsub{font-size:12px;fill:#57606a}
+.rowhead{font-size:17px;font-weight:700}
+.rowsub{font-size:12px;fill:#57606a}
+.name{font-size:15px;font-weight:700}
+.tag{font-size:11px;fill:#57606a}
+.code{font-size:10.5px;font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;fill:#1f2328}
+.note{font-size:12px;font-style:italic;fill:#8c959f}
+.band{font-size:12px;font-weight:600;fill:#8a5a00}
+</style>
+<rect width="1400" height="708" fill="#ffffff"/>
+<text x="30" y="40" class="title">KaleLinear API map</text>
+<text x="30" y="60" class="sub">Transformers (embed) vs. estimators (predict), by what the learned model shares across domains/groups and what is specific to them</text>
+<text x="500.0" y="98" text-anchor="middle" class="colhead">Common</text>
+<text x="500.0" y="114" text-anchor="middle" class="colsub">shared / transferable across domains, groups, views</text>
+<text x="1105.0" y="98" text-anchor="middle" class="colhead">Specific</text>
+<text x="1105.0" y="114" text-anchor="middle" class="colsub">group-specific / individual to each block</text>
+<rect x="167" y="128" width="1210" height="384" rx="10" fill="#FAFCFB" stroke="#d0d7de"/>
+<rect x="167" y="528" width="1210" height="158" rx="10" fill="#FBFAFE" stroke="#d0d7de"/>
+<line x1="830.0" y1="128" x2="830.0" y2="686" stroke="#afb8c1" stroke-dasharray="5 4"/>
+<text transform="translate(52,320.0) rotate(-90)" text-anchor="middle" class="rowhead" fill="#0F6B5A">Transformers</text>
+<text transform="translate(72,320.0) rotate(-90)" text-anchor="middle" class="rowsub">embed · fit / transform</text>
+<text transform="translate(52,607.0) rotate(-90)" text-anchor="middle" class="rowhead" fill="#4B3FA8">Estimators</text>
+<text transform="translate(72,607.0) rotate(-90)" text-anchor="middle" class="rowsub">predict · fit / predict</text>
+<rect x="179" y="142" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="191" y="164" class="name" fill="#0F6B5A">MPCA</text>
+<text x="191" y="180" class="tag">multilinear dimension reduction</text>
+<text x="191" y="200" class="code">fit(X, y)</text>
+<text x="191" y="213.5" class="code">transform(X)</text>
+<text x="191" y="227.0" class="code">inverse_transform(X)</text>
+<rect x="393" y="142" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="405" y="164" class="name" fill="#0F6B5A">CORAL</text>
+<text x="405" y="180" class="tag">correlation alignment</text>
+<text x="405" y="200" class="code">fit(X, y, covariates)</text>
+<text x="405" y="213.5" class="code">transform(X, covariates)</text>
+<rect x="607" y="142" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="619" y="164" class="name" fill="#0F6B5A">GFK</text>
+<text x="619" y="180" class="tag">geodesic flow kernel</text>
+<text x="619" y="200" class="code">fit(X, y, covariates)</text>
+<text x="619" y="213.5" class="code">transform(X)</text>
+<rect x="179" y="256" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="191" y="278" class="name" fill="#0F6B5A">TCA</text>
+<text x="191" y="294" class="tag">transfer component analysis</text>
+<text x="191" y="314" class="code">fit(X, y, covariates)</text>
+<text x="191" y="327.5" class="code">transform(X, covariates)</text>
+<text x="191" y="341.0" class="code">inverse_transform(X)</text>
+<rect x="393" y="256" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="405" y="278" class="name" fill="#0F6B5A">JDA · BDA</text>
+<text x="405" y="294" class="tag">joint / balanced distribution adapt.</text>
+<text x="405" y="314" class="code">fit(X, y, covariates)</text>
+<text x="405" y="327.5" class="code">transform(X, covariates)</text>
+<text x="405" y="341.0" class="code">inverse_transform(X)</text>
+<rect x="607" y="256" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="619" y="278" class="name" fill="#0F6B5A">MIDA</text>
+<text x="619" y="294" class="tag">max. independence domain adapt.</text>
+<text x="619" y="314" class="code">fit(X, y, covariates)</text>
+<text x="619" y="327.5" class="code">transform(X, covariates)</text>
+<text x="619" y="341.0" class="code">inverse_transform(X)</text>
+<text x="1105.0" y="238" text-anchor="middle" class="note">no purely group-specific transformer;</text>
+<text x="1105.0" y="256" text-anchor="middle" class="note">see the common + individual band below</text>
+<rect x="580" y="372" width="500" height="130" rx="10" fill="#FFF7E6" stroke="#D9A441" stroke-dasharray="6 4"/>
+<text x="830.0" y="388" text-anchor="middle" class="band">common + individual separation across groups / blocks</text>
+<rect x="590" y="396" width="236" height="96" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="602" y="418" class="name" fill="#0F6B5A">CIFE</text>
+<text x="602" y="434" class="tag">common &amp; individual feature extraction</text>
+<text x="602" y="454" class="code">fit(X, y, groups)</text>
+<text x="602" y="467.5" class="code">transform(X, groups)</text>
+<rect x="834" y="396" width="236" height="96" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
+<text x="846" y="418" class="name" fill="#0F6B5A">AJIVE</text>
+<text x="846" y="434" class="tag">angle-based joint &amp; individual variation</text>
+<text x="846" y="454" class="code">fit(X, y, groups)</text>
+<text x="846" y="467.5" class="code">transform(X, groups)</text>
+<rect x="179" y="542" width="200" height="130" rx="8" fill="#EDEBFA" stroke="#6A5ACD" stroke-width="1.2"/>
+<text x="191" y="564" class="name" fill="#4B3FA8">LapSVM · LapRLS</text>
+<text x="191" y="580" class="tag">manifold regularization</text>
+<text x="191" y="600" class="code">fit(X, y)</text>
+<text x="191" y="613.5" class="code">predict(X)</text>
+<text x="191" y="627.0" class="code">decision_function(X)</text>
+<text x="191" y="640.5" class="code">fit_predict(X, y)</text>
+<rect x="393" y="542" width="200" height="130" rx="8" fill="#EDEBFA" stroke="#6A5ACD" stroke-width="1.2"/>
+<text x="405" y="564" class="name" fill="#4B3FA8">ARSVM · ARRLS</text>
+<text x="405" y="580" class="tag">adaptation regularization</text>
+<text x="405" y="600" class="code">fit(X, y, covariates)</text>
+<text x="405" y="613.5" class="code">predict(X)</text>
+<text x="405" y="627.0" class="code">decision_function(X)</text>
+<text x="405" y="640.5" class="code">fit_predict(X, y, covariates)</text>
+<rect x="607" y="542" width="200" height="130" rx="8" fill="#EDEBFA" stroke="#6A5ACD" stroke-width="1.2"/>
+<text x="619" y="564" class="name" fill="#4B3FA8">CoIRSVM · CoIRLS</text>
+<text x="619" y="580" class="tag">covariate independence regularized</text>
+<text x="619" y="600" class="code">fit(X, y, covariates)</text>
+<text x="619" y="613.5" class="code">predict(X)</text>
+<text x="619" y="627.0" class="code">decision_function(X)</text>
+<text x="619" y="640.5" class="code">fit_predict(X, y, covariates)</text>
+<rect x="985.0" y="542" width="240" height="130" rx="8" fill="#EDEBFA" stroke="#6A5ACD" stroke-width="1.2"/>
+<text x="997.0" y="564" class="name" fill="#4B3FA8">GSDA</text>
+<text x="997.0" y="580" class="tag">group-specific discriminant analysis</text>
+<text x="997.0" y="600" class="code">fit(X, y, groups)</text>
+<text x="997.0" y="613.5" class="code">predict(X)</text>
+<text x="997.0" y="627.0" class="code">predict_proba(X)</text>
+</svg>

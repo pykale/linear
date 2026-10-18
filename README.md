@@ -39,6 +39,10 @@ The package is part of the [PyKale](https://github.com/pykale/pykale) ecosystem 
 - scikit-learn style `fit`, `transform`, `predict`, `fit_transform`, and `fit_predict` workflows where applicable.
 - Most methods accept additional `covariates` — e.g., domain or group labels — alongside `X` and `y`, with optional one-hot encoding for categorical values; multiblock transformers (CIFE, AJIVE) take `groups` to specify block membership.
 
+<p align="center">
+<img src="https://github.com/pykale/linear/raw/main/docs/images/api_map.jpg" width="100%" alt="KaleLinear API map: transformers (embed) and estimators (predict) arranged by common vs. specific learning" />
+</p>
+
 KaleLinear requires Python 3.10 or later. Core dependencies include:
 
 - [NumPy](http://www.numpy.org/)

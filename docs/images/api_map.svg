@@ -36,7 +36,7 @@
 <text x="405" y="164" class="name" fill="#0F6B5A">CORAL</text>
 <text x="405" y="180" class="tag">correlation alignment</text>
 <text x="405" y="200" class="code">fit(X, y, covariates)</text>
-<text x="405" y="213.5" class="code">transform(X, covariates)</text>
+<text x="405" y="213.5" class="code">transform(X)</text>
 <rect x="607" y="142" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
 <text x="619" y="164" class="name" fill="#0F6B5A">GFK</text>
 <text x="619" y="180" class="tag">geodesic flow kernel</text>
@@ -46,19 +46,19 @@
 <text x="191" y="278" class="name" fill="#0F6B5A">TCA</text>
 <text x="191" y="294" class="tag">transfer component analysis</text>
 <text x="191" y="314" class="code">fit(X, y, covariates)</text>
-<text x="191" y="327.5" class="code">transform(X, covariates)</text>
+<text x="191" y="327.5" class="code">transform(X)</text>
 <text x="191" y="341.0" class="code">inverse_transform(X)</text>
 <rect x="393" y="256" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
 <text x="405" y="278" class="name" fill="#0F6B5A">JDA · BDA</text>
 <text x="405" y="294" class="tag">joint / balanced distribution adapt.</text>
 <text x="405" y="314" class="code">fit(X, y, covariates)</text>
-<text x="405" y="327.5" class="code">transform(X, covariates)</text>
+<text x="405" y="327.5" class="code">transform(X)</text>
 <text x="405" y="341.0" class="code">inverse_transform(X)</text>
 <rect x="607" y="256" width="200" height="100" rx="8" fill="#E6F4F1" stroke="#1D8F7A" stroke-width="1.2"/>
 <text x="619" y="278" class="name" fill="#0F6B5A">MIDA</text>
 <text x="619" y="294" class="tag">max. independence domain adapt.</text>
 <text x="619" y="314" class="code">fit(X, y, covariates)</text>
-<text x="619" y="327.5" class="code">transform(X, covariates)</text>
+<text x="619" y="327.5" class="code">transform(X)</text>
 <text x="619" y="341.0" class="code">inverse_transform(X)</text>
 <text x="1105.0" y="238" text-anchor="middle" class="note">no purely group-specific transformer;</text>
 <text x="1105.0" y="256" text-anchor="middle" class="note">see the common + individual band below</text>

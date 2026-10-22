@@ -19,6 +19,8 @@ The package is part of the [PyKale](https://github.com/pykale/pykale) ecosystem 
   - Dimension reduction for multiview tensor data:
     - Multilinear Principal Component Analysis (`MPCA`) [[1](#references)]
   - Transferable / generalizable feature extraction across domains or groups:
+    - Correlation Alignment (`CORAL`) [[13](#references)]
+    - Geodesic Flow Kernel (`GFK`) [[14](#references)]
     - Transfer Component Analysis (`TCA`) [[2](#references)]
     - Joint Distribution Adaptation (`JDA`) [[3](#references)]
     - Balanced Distribution Adaptation (`BDA`) [[4](#references)]
@@ -36,6 +38,10 @@ The package is part of the [PyKale](https://github.com/pykale/pykale) ecosystem 
 - Lightweight: plain NumPy array inputs and outputs — no deep-learning framework or GPU required.
 - scikit-learn style `fit`, `transform`, `predict`, `fit_transform`, and `fit_predict` workflows where applicable.
 - Most methods accept additional `covariates` — e.g., domain or group labels — alongside `X` and `y`, with optional one-hot encoding for categorical values; multiblock transformers (CIFE, AJIVE) take `groups` to specify block membership.
+
+<p align="center">
+<img src="https://github.com/pykale/linear/raw/main/docs/images/api_map.jpg" width="100%" alt="KaleLinear API map: transformers (embed) and estimators (predict) arranged by common vs. specific learning" />
+</p>
 
 KaleLinear requires Python 3.10 or later. Core dependencies include:
 
@@ -97,7 +103,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 ### Public API
 
 ```python
-from kalelinear.transformer import BDA, JDA, MIDA, MPCA, TCA
+from kalelinear.transformer import BDA, CORAL, JDA, MIDA, MPCA, TCA
 from kalelinear.estimator import ARRLS, ARSVM, CoIRLS, CoIRSVM, GSDA, LapRLS, LapSVM
 ```
 
@@ -105,6 +111,7 @@ Worked examples for the main transformers and estimators are collected in
 [Tutorials](TUTORIALS.md):
 
 - Learn a domain-invariant embedding with TCA
+- Align source and target features with CORAL
 - Use MIDA with categorical covariates
 - Extract common and individual features across groups with CIFE or AJIVE
 - Train a domain adaptation classifier (ARSVM, ARRLS)
@@ -135,6 +142,10 @@ Worked examples for the main transformers and estimators are collected in
 [11] Zhou, G., Cichocki, A., Zhang, Y. and Mandic, D., 2016. [Group component analysis for multiblock data: Common and individual feature extraction](https://ieeexplore.ieee.org/abstract/document/7310871). _IEEE Transactions on Neural Networks and Learning Systems_, 27(11), pp.2426-2439.
 
 [12] Feng, Q., Jiang, M., Hannig, J. and Marron, J.S., 2018. [Angle-based joint and individual variation explained](https://www.sciencedirect.com/science/article/pii/S0047259X1730204X). _Journal of Multivariate Analysis_, 166, pp.241-265.
+
+[13] Sun, B., Feng, J. and Saenko, K., 2016. [Return of frustratingly easy domain adaptation](https://ojs.aaai.org/index.php/AAAI/article/view/10306). In _Proceedings of the AAAI Conference on Artificial Intelligence_ (Vol. 30, No. 1, pp. 2058-2065).
+
+[14] Gong, B., Shi, Y., Sha, F. and Grauman, K., 2012. [Geodesic flow kernel for unsupervised domain adaptation](https://ieeexplore.ieee.org/document/6247911). In _IEEE Conference on Computer Vision and Pattern Recognition_ (pp. 2066-2073).
 
 ## Other open domain adaptation repositories
 

@@ -31,6 +31,11 @@ The transformer classes are also available through the PyKale-compatible alias
    :undoc-members:
    :show-inheritance:
 
+.. autoclass:: GFK
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. autoclass:: MIDA
    :members:
    :undoc-members:

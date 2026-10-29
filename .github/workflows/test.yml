@@ -56,6 +56,9 @@ jobs:
 
       - name: Install project and dev dependencies
         run: |
+          # Build prerequisites must be present first because --no-build-isolation reuses this environment
+          # (e.g. matplotlib needs numpy to generate its metadata when built from source).
+          python -m pip install --upgrade pip setuptools wheel numpy
           pip install --no-build-isolation -e .[dev]
         shell: bash -l {0}
 

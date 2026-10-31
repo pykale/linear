@@ -59,6 +59,9 @@ jobs:
           # Build prerequisites must be present first because --no-build-isolation reuses this environment
           # (e.g. matplotlib needs numpy to generate its metadata when built from source).
           python -m pip install --upgrade pip setuptools wheel numpy
+          # The pykale release on PyPI (0.1.0) pins matplotlib<=3.5.2, which cannot be built on Python 3.12,
+          # so install pykale from GitHub first. pip then treats the "pykale" requirement as already satisfied.
+          pip install "pykale @ git+https://github.com/pykale/pykale.git"
           pip install --no-build-isolation -e .[dev]
         shell: bash -l {0}
 

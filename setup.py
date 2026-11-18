@@ -21,7 +21,9 @@ example_requires = [
     "matplotlib",
     "nibabel",
     "nilearn",
+    "pydicom",
     "pykale",
+    "rdkit>=2025.3.1",
     "seaborn",
     "yacs>=0.1.7",
 ]

@@ -1,6 +1,8 @@
 import copy
 import os
 import pickle
+import time
+from urllib.error import HTTPError, URLError
 from urllib.request import urlretrieve
 
 import numpy as np
@@ -87,7 +89,14 @@ def run_experiment(cfg, lambda_):
         if download:
             os.makedirs(data_dir, exist_ok=True)
             print("Downloading label file for %s dataset. \n" % dataset)
-            urlretrieve(LABEL_FILE_LINK[dataset], label_fpath)
+            for attempt in range(5):  # Zenodo occasionally returns transient 5xx errors
+                try:
+                    urlretrieve(LABEL_FILE_LINK[dataset], label_fpath)
+                    break
+                except (HTTPError, URLError):
+                    if attempt == 4:
+                        raise
+                    time.sleep(2 * (attempt + 1))
         else:
             raise ValueError("File %s does not exist" % label_file)
     labels = read_tabular(label_fpath, index_col="ID")

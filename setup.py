@@ -24,7 +24,9 @@ example_requires = [
     "pydicom",
     "pykale",
     "rdkit>=2025.3.1",
+    "scikit-image>=0.24.0",
     "seaborn",
+    "torch-geometric",
     "yacs>=0.1.7",
 ]
 

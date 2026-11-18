@@ -59,6 +59,11 @@ jobs:
           # Build prerequisites must be present first because --no-build-isolation reuses this environment
           # (e.g. matplotlib needs numpy to generate its metadata when built from source).
           python -m pip install --upgrade pip setuptools wheel numpy
+          # pykale imports torch_geometric and torch_sparse, which need prebuilt wheels matching the torch version
+          # (same setup as the pykale CI). Keep the torch version in sync with pykale's "torch<=2.6.0" pin.
+          pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install torch_scatter==2.1.2 torch_sparse==0.6.18 -f https://data.pyg.org/whl/torch-2.6.0+cpu.html
+          pip install torch_geometric==2.6.0
           # The pykale release on PyPI (0.1.0) pins matplotlib<=3.5.2, which cannot be built on Python 3.12,
           # so install pykale from GitHub first. pip then treats the "pykale" requirement as already satisfied.
           pip install "pykale @ git+https://github.com/pykale/pykale.git"

@@ -140,7 +140,11 @@ def main():
     # ---- model weights interpretation ----
     trainer.fit(x, y)
 
-    weights = trainer.mpca.inverse_transform(trainer.clf.coef_) - trainer.mpca.mean_
+    # scatter classifier coefficients back to the full MPCA feature space before reconstruction
+    n_coefs = trainer.clf.coef_.shape[1]
+    mpca_coefs = np.zeros((trainer.clf.coef_.shape[0], len(trainer.feature_order)))
+    mpca_coefs[:, trainer.feature_order[:n_coefs]] = trainer.clf.coef_
+    weights = trainer.mpca.inverse_transform(mpca_coefs) - trainer.mpca.mean_
     weights = rescale_img_stack(weights, cfg.PROC.SCALE)  # rescale weights to original shape
     weights = mask_img_stack(weights, mask)  # masking weights
     top_weights = model_weights.select_top_weight(weights, select_ratio=0.02)  # select top 2% weights

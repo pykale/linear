@@ -58,6 +58,8 @@ def main():
     # ---- Read Phenotypic data ----
     pheno_file = os.path.join(cfg.DATASET.ROOT, "ABIDE_pcp/Phenotypic_V1_0b_preprocessed1.csv")
     pheno_info = pd.read_csv(pheno_file, index_col=0)
+    if cfg.DATASET.SITE_IDS is not None:  # None means all sites
+        pheno_info = pheno_info[pheno_info["SITE_ID"].isin(cfg.DATASET.SITE_IDS)]
 
     # ---- Read timeseries from files ----
     data_dir = os.path.join(cfg.DATASET.ROOT, "ABIDE_pcp/%s/filt_noglobal" % cfg.DATASET.PIPELINE)

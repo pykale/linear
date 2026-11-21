@@ -4,7 +4,7 @@
 
 * MPCA updated to a new version more compatible with NumPy/scikit-learn workflows, with a memory-efficient implementation and a new `MPCATrainer` pipeline.
 * Added `embed` and `predict` modules to the Kale API.
-* Added a group-specific discriminant analysis (GSDA) example for brain lateralization analysis.
+* Brain lateralization analysis with group-specific discriminant analysis (GSDA) is available in [GSDA-Lateralization](https://github.com/shuo-zhou/GSDA-Lateralization).
 * Added Sphinx documentation and ReadTheDocs configuration.
 * Added detailed contributing guidelines, a code of conduct, and issue and pull request templates.
 

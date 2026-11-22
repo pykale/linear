@@ -14,10 +14,11 @@ import pandas as pd
 from config import get_cfg_defaults
 from kale.interpret import model_weights, visualize
 from kale.loaddata.image_access import dicom2arraylist, read_dicom_dir
-from kale.pipeline.mpca_trainer import MPCATrainer
 from kale.prepdata.image_transform import mask_img_stack, normalize_img_stack, reg_img_stack, rescale_img_stack
 from kale.utils.download import download_file_by_url
-from sklearn.model_selection import cross_validate
+from sklearn.model_selection import cross_validate, StratifiedKFold
+
+from kalelinear.pipeline.mpca_trainer import MPCATrainer
 
 
 def arg_parse():
@@ -130,7 +131,8 @@ def main():
     # ---- evaluating machine learning pipeline ----
     x = np.concatenate([img_norm[i].reshape((1,) + img_norm[i].shape) for i in range(n_samples)], axis=0)
     trainer = MPCATrainer(classifier=cfg.PIPELINE.CLASSIFIER, n_features=200)
-    cv_results = cross_validate(trainer, x, y, cv=10, scoring=["accuracy", "roc_auc"], n_jobs=1)
+    cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=0)
+    cv_results = cross_validate(trainer, x, y, cv=cv, scoring=["accuracy", "roc_auc"], n_jobs=1)
 
     print("Averaged training time: {:.4f} seconds".format(np.mean(cv_results["fit_time"])))
     print("Averaged testing time: {:.4f} seconds".format(np.mean(cv_results["score_time"])))
@@ -142,8 +144,8 @@ def main():
 
     # scatter classifier coefficients back to the full MPCA feature space before reconstruction
     n_coefs = trainer.clf.coef_.shape[1]
-    mpca_coefs = np.zeros((trainer.clf.coef_.shape[0], len(trainer.feature_order)))
-    mpca_coefs[:, trainer.feature_order[:n_coefs]] = trainer.clf.coef_
+    mpca_coefs = np.zeros((trainer.clf.coef_.shape[0], len(trainer.feature_order_)))
+    mpca_coefs[:, trainer.feature_order_[:n_coefs]] = trainer.clf.coef_
     weights = trainer.mpca.inverse_transform(mpca_coefs) - trainer.mpca.mean_
     weights = rescale_img_stack(weights, cfg.PROC.SCALE)  # rescale weights to original shape
     weights = mask_img_stack(weights, mask)  # masking weights

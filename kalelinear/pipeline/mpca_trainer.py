@@ -79,50 +79,19 @@ class MPCATrainer(BaseEstimator, ClassifierMixin):
             logging.error(error_msg)
             raise ValueError(error_msg)
 
+        if not (classifier_params == "auto" or isinstance(classifier_params, dict)):
+            error_msg = "Invalid classifier parameter type"
+            logging.error(error_msg)
+            raise ValueError(error_msg)
+
+        # scikit-learn convention: store constructor arguments unchanged so that clone() works;
+        # defaults are resolved and sub-estimators are built in fit().
         self.classifier = classifier
-        # init mpca object
-        if mpca_params is None:
-            self.mpca_params = dict(default_mpca_params)
-        else:
-            self.mpca_params = dict(mpca_params)
-        self.mpca = MPCA(**self.mpca_params)
-        # init feature selection parameters
-        self.n_features = n_features
-        # init classifier object
-        if search_params is None:
-            self.search_params = dict(default_search_params)
-        else:
-            self.search_params = dict(search_params)
+        self.classifier_params = classifier_params
         self.classifier_param_grid = classifier_param_grid
-
-        self.auto_classifier_param = False
-        if classifier_params == "auto":
-            self.auto_classifier_param = True
-            if self.classifier_param_grid is None:
-                self.classifier_param_grid = {
-                    param_name: list(values) for param_name, values in classifiers[classifier][1].items()
-                }
-            self.grid_search = GridSearchCV(
-                classifiers[classifier][0](), param_grid=self.classifier_param_grid, **self.search_params
-            )
-            self.clf = None
-        elif isinstance(classifier_params, dict):
-            self.clf = classifiers[classifier][0](**classifier_params)
-        else:
-            error_msg = "Invalid classifier parameter type"
-            logging.error(error_msg)
-            raise ValueError(error_msg)
-
-        if isinstance(classifier_params, dict):
-            self.classifier_params = dict(classifier_params)
-            self.clf = classifiers[classifier][0](**classifier_params)
-        elif classifier_params == "auto":
-            self.auto_classifier_param = True
-            self.classifier_params = "auto"
-        else:
-            error_msg = "Invalid classifier parameter type"
-            logging.error(error_msg)
-            raise ValueError(error_msg)
+        self.mpca_params = mpca_params
+        self.n_features = n_features
+        self.search_params = search_params
 
     def fit(self, X, y):
         """Fit a pipeline with the given data X and labels y
@@ -134,6 +103,24 @@ class MPCATrainer(BaseEstimator, ClassifierMixin):
         Returns:
             self
         """
+        # resolve parameters and build sub-estimators
+        mpca_params = dict(default_mpca_params if self.mpca_params is None else self.mpca_params)
+        search_params = dict(default_search_params if self.search_params is None else self.search_params)
+        self.auto_classifier_param = self.classifier_params == "auto"
+        if self.auto_classifier_param:
+            if self.classifier_param_grid is None:
+                self.classifier_param_grid_ = {
+                    name: list(values) for name, values in classifiers[self.classifier][1].items()
+                }
+            else:
+                self.classifier_param_grid_ = {
+                    name: list(values) for name, values in self.classifier_param_grid.items()
+                }
+            self.clf = None
+        else:
+            self.clf = classifiers[self.classifier][0](**self.classifier_params)
+        self.mpca = MPCA(**mpca_params)
+
         # fit mpca
         self.mpca.fit(X)
         self.mpca.set_params(**{"vectorize": True})
@@ -152,19 +139,18 @@ class MPCATrainer(BaseEstimator, ClassifierMixin):
 
         # fit classifier
         if self.auto_classifier_param:
-            param_grid = {name: list(values) for name, values in self.classifier_param_grid.items()}
+            param_grid = {name: list(values) for name, values in self.classifier_param_grid_.items()}
             extra_c = 1 / X.shape[0]
             if extra_c not in param_grid["C"]:
                 param_grid["C"].append(extra_c)
-            self.grid_search = GridSearchCV(
-                classifiers[self.classifier][0](), param_grid=param_grid, **self.search_params
-            )
+            self.grid_search = GridSearchCV(classifiers[self.classifier][0](), param_grid=param_grid, **search_params)
             self.grid_search.fit(X_transformed, y)
             self.clf = self.grid_search.best_estimator_
         if self.classifier == "svc":
             self.clf.set_params(**{"probability": True})
 
         self.clf.fit(X_transformed, y)
+        self.classes_ = self.clf.classes_
         return self
 
     def predict(self, X):

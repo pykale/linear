@@ -5,7 +5,7 @@
 [![tests](https://github.com/pykale/linear/workflows/test/badge.svg)](https://github.com/pykale/linear/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/pykale/linear/branch/main/graph/badge.svg)](https://codecov.io/gh/pykale/linear)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/pykale/linear/blob/main/LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org)
+[![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](https://www.python.org)
 [![PyPI version](https://img.shields.io/pypi/v/kalelinear?color=blue)](https://pypi.org/project/kalelinear/)
 [![PyPI downloads](https://pepy.tech/badge/kalelinear)](https://pepy.tech/project/kalelinear)
 
